@@ -40,7 +40,7 @@ class PinDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
+        setContent {/*
             val pinNome = intent.getStringExtra("pinNome")
             val pinImg = intent.getIntExtra("pinImg",0)
             val pinCriador = intent.getStringExtra("pinCriador")
@@ -49,13 +49,17 @@ class PinDetailsActivity : ComponentActivity() {
                 PinDetails(pinImg, pinNome, pinCriador, pinTopComentario)
             }else{
                Text("moiou. Telefone moiou")
-            }
+            }*/
         }
     }
 }
 @Composable
-fun PinDetails(pinImg: Int, pinNome: String, pinCriador: String?, pinTopComentario: String?) {
-    val context = LocalContext.current
+fun PinDetails(pinDetails: () -> Unit,
+               pinImg: Int,
+               pinNome: String,
+               pinCriador: String?,
+               pinTopComentario: String?)
+{
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -72,12 +76,8 @@ fun PinDetails(pinImg: Int, pinNome: String, pinCriador: String?, pinTopComentar
                     modifier = Modifier
                         .size(width = 40.dp, height = 40.dp),
                     onClick = {
-                        val intent = Intent(
-                            context,
-                            HomeScreenActivity::class.java
-                        )
+
                         Log.d("botaoBackToHome", "usuario-clicouVoltarParaHome")
-                        context.startActivity(intent)
                     }) {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowLeft,

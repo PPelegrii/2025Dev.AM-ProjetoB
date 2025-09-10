@@ -1,6 +1,5 @@
 package com.example.pinlikest
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -24,8 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.pinlikest.ui.theme.PinlikestTheme
 import com.example.pinlikest.ui.theme.Typography
 
@@ -35,15 +35,14 @@ class TelaLogoActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PinlikestTheme {
-                TelaLogo()
+                AppNavigation()
                 }
             }
         }
     }
-@Preview(showBackground = true)
 @Composable
-fun TelaLogo() {
-    val context = LocalContext.current
+fun TelaLogo(toHome: () -> Unit) {
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.primary,
@@ -81,12 +80,8 @@ fun TelaLogo() {
                     Button(
                         modifier = Modifier.padding(10.dp),
                         onClick = {
-                            val intent = Intent(
-                                context,
-                                HomeScreenActivity::class.java
-                            )
-                            Log.d("botaoEntrar", "usuario-entrou")
-                            context.startActivity(intent)
+                            toHome.invoke()
+                            Log.d("botaoHome", "usuario-clicouHome_route")
 
                         }) {
                         Text("Explorar suas próximas ideias")

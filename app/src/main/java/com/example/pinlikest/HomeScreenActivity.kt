@@ -14,10 +14,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -45,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -78,6 +83,7 @@ fun HomeScreen(navController: NavHostController) {
         },
         bottomBar = {
             BottomAppBar(
+                modifier = Modifier.fillMaxHeight(.087f),
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.primary,
 
@@ -135,33 +141,38 @@ fun HomeScreen(navController: NavHostController) {
             }
         },
         content = { paddingValues ->
-            Row(
-                verticalAlignment = Alignment.Top,
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingValues)
-                    .verticalScroll(rememberScrollState())
             ) {
-                Column(
-                    Modifier
-                        .padding(8.dp)
-                        .weight(1f)
-                ) {
-                    pins.filterIndexed { index, _ -> index % 2 == 0 } // pega os pins pares
-                        .forEach { pin ->
-                            PinHomeTemplate(pin)
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Column(
+                            Modifier
+                                .weight(1f)
+                                .padding(4.dp),
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            pins.filterIndexed { index, _ -> index % 2 == 0 }
+                                .forEach { pin ->
+                                    PinHomeTemplate(pin = pin)
+                                }
                         }
-                }
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .weight(1f)
-                ) {
-                    pins.filterIndexed { index, _ -> index % 2 != 0 } // pega os impares
-                        .forEach { pin ->
-                            PinHomeTemplate(pin)
+                        Column(
+                            Modifier
+                                .weight(1f)
+                                .padding(4.dp),
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            pins.filterIndexed { index, _ -> index % 2 != 0 }
+                                .forEach { pin ->
+                                    PinHomeTemplate(pin = pin)
+                                }
                         }
+                    }
                 }
             }
         }
@@ -169,7 +180,6 @@ fun HomeScreen(navController: NavHostController) {
 }
 @Composable
 fun PinHomeTemplate(pin: Pin) {
-    val context = LocalContext.current
 
     Card(
         colors = CardDefaults.cardColors(
@@ -179,6 +189,7 @@ fun PinHomeTemplate(pin: Pin) {
         modifier = Modifier
             .fillMaxWidth()
             .border(BorderStroke(2.dp, MaterialTheme.colorScheme.surfaceVariant))
+            .clickable {}
     ) {
     Image(
         painter = painterResource(pin.image),
@@ -186,14 +197,7 @@ fun PinHomeTemplate(pin: Pin) {
             .fillMaxWidth()
             .clickable
             {
-                val intent = Intent(context, PinDetailsActivity::class.java)
-                Log.d("ButaoPin", "UserPinDetailsButton")
 
-                intent.putExtra("pinNome", pin.pinNome)
-                intent.putExtra("pinImg", pin.image)
-                intent.putExtra("pinCriador", pin.pinCriador)
-                intent.putExtra("pinCriador", pin.pinTopComentario)
-                context.startActivity(intent)
             },
         contentDescription = "ImagePin"
     )
@@ -210,14 +214,9 @@ fun PinHomeTemplate(pin: Pin) {
 
             IconButton(
                 onClick = {
-                    val intent = Intent(context, PinDetailsActivity::class.java)
+
                     Log.d("ButaoPin", "UserPinDetailsButton")
 
-                    intent.putExtra("pinNome", pin.pinNome)
-                    intent.putExtra("pinImg", pin.image)
-                    intent.putExtra("pinCriador", pin.pinCriador)
-                    intent.putExtra("pinCriador", pin.pinTopComentario)
-                    context.startActivity(intent)
             }) {
                 Icon(imageVector = Icons.Default.MoreVert, contentDescription = "")
             }
@@ -225,3 +224,12 @@ fun PinHomeTemplate(pin: Pin) {
     }
     Spacer(modifier = Modifier.height(8.dp))
 }
+
+/*val intent = Intent(context, PinDetailsActivity::class.java)
+Log.d("ButaoPin", "UserPinDetailsButton")
+
+intent.putExtra("pinNome", pin.pinNome)
+intent.putExtra("pinImg", pin.image)
+intent.putExtra("pinCriador", pin.pinCriador)
+intent.putExtra("pinCriador", pin.pinTopComentario)
+context.startActivity(intent)*/

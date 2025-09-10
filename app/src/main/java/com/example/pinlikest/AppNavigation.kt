@@ -3,6 +3,7 @@ package com.example.pinlikest
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,19 +13,31 @@ import androidx.navigation.compose.rememberNavController
 fun AppNavigation(){
     val navController = rememberNavController()
 
-    NavHost(navController, startDestination = "HomeScreenActivity"){
+    NavHost(navController, startDestination = "TelaLogo"){
 
-        composable("HomeScreenActivity") { HomeScreen(navController) }
+        composable("TelaLogo") {
+            TelaLogo(toHome = { navController.navigate("HomeScreen") }) }
 
-        composable("PinDetailsActivity") {
+        composable("HomeScreen") {
+            HomeScreen(navController) }
+
+        composable("PinDetails") {
+            backstackEntry ->
+
+            var pin: Pin
+
+            PinDetails(pinDetails = { navController.navigate("PinDetails") }
+            ) }
+
+        /*composable("PinDetailsActivity") {
             backstackEntry ->
             var pin: Pin
-            val pinImg = TODO()
+            val pinImg =
             val pinNome: String
             val pinCriador: String?
             val pinTopComentario: String?
             //PinDetails
-        }
+        }*/
         /*composable("tela2/{nome}") {
                 backstackEntry ->
             val nome = backstackEntry.arguments?.getString("nome") ?: ""
