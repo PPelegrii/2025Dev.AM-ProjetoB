@@ -16,18 +16,18 @@ fun AppNavigation(){
     NavHost(navController, startDestination = "TelaLogo"){
 
         composable("TelaLogo") {
-            TelaLogo(toHome = { navController.navigate("HomeScreen") }) }
+            //TelaLogo(toHome = { navController.navigate("HomeScreen") }) }
 
-        composable("HomeScreen") {
+        //composable("HomeScreen") {
             HomeScreen(navController) }
 
-        composable("PinDetails") {
+        /*composable("PinDetails") {
             backstackEntry ->
 
             var pin: Pin
 
             PinDetails(pinDetails = { navController.navigate("PinDetails") }
-            ) }
+            ) }*/
 
         /*composable("PinDetailsActivity") {
             backstackEntry ->
