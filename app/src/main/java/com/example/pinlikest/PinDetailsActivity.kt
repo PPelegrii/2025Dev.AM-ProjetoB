@@ -1,6 +1,5 @@
 package com.example.pinlikest
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -32,7 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
@@ -40,26 +38,19 @@ class PinDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {/*
-            val pinNome = intent.getStringExtra("pinNome")
-            val pinImg = intent.getIntExtra("pinImg",0)
-            val pinCriador = intent.getStringExtra("pinCriador")
-            val pinTopComentario = intent.getStringExtra("pinTopComentario")
-            if (pinImg != 0 && pinNome != null){
-                PinDetails(pinImg, pinNome, pinCriador, pinTopComentario)
-            }else{
-               Text("moiou. Telefone moiou")
-            }*/
+        setContent {
+            AppNavigation()
         }
     }
 }
 @Composable
-fun PinDetails(pinDetails: () -> Unit,
-               pinImg: Int,
-               pinNome: String,
-               pinCriador: String?,
-               pinTopComentario: String?)
-{
+fun PinDetails(
+    pinImg: Int,
+    pinNome: String,
+    pinCriador: String?,
+    pinTopComentario: String?,
+    onBack:() -> Unit
+) {
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -76,7 +67,7 @@ fun PinDetails(pinDetails: () -> Unit,
                     modifier = Modifier
                         .size(width = 40.dp, height = 40.dp),
                     onClick = {
-
+                        onBack.invoke()
                         Log.d("botaoBackToHome", "usuario-clicouVoltarParaHome")
                     }) {
                     Icon(

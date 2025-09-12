@@ -1,6 +1,5 @@
 package com.example.pinlikest
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -15,15 +14,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
@@ -31,6 +26,10 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.MailOutline
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -47,12 +46,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.example.pinlikest.ui.theme.PinlikestTheme
 
 class HomeScreenActivity : ComponentActivity() {
@@ -68,7 +63,7 @@ class HomeScreenActivity : ComponentActivity() {
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(onClickPinDetails: (Pin) -> Unit) {
     val pins = remember { PinsDatabase.pinsData.shuffled() }
 
     Scaffold(
@@ -92,20 +87,16 @@ fun HomeScreen(navController: NavHostController) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround,
                 ) {
-                    IconButton(onClick = {
-                        Log.d("botaoHome", "usuario-clicouHome_route")
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Home,
-                            contentDescription = "",
-                            modifier = Modifier.size(40.dp)
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Filled.Home,
+                        contentDescription = "",
+                        modifier = Modifier.size(40.dp)
+                    )
                     IconButton(onClick = {
                         Log.d("botaoSearch", "usuario-clicouSearch_route")
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Search,
+                            imageVector = Icons.Outlined.Search,
                             contentDescription = "",
                             modifier = Modifier.size(40.dp)
                         )
@@ -114,25 +105,27 @@ fun HomeScreen(navController: NavHostController) {
                         Log.d("botaoCreate/Upload", "usuario-clicouCreate/Upload_route")
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Add,
+                            imageVector = Icons.Outlined.Add,
                             contentDescription = "",
                             modifier = Modifier.size(40.dp)
                         )
                     }
                     IconButton(onClick = {
+
                         Log.d("botaoMessages", "usuario-clicouMessages_route")
                     }) {
                         Icon(
-                            imageVector = Icons.Default.MailOutline,
+                            imageVector = Icons.Outlined.MailOutline,
                             contentDescription = "",
                             modifier = Modifier.size(40.dp)
                         )
                     }
                     IconButton(onClick = {
+
                         Log.d("botaoUserProfile", "usuario-clicouUserProfile_route")
                     }) {
                         Icon(
-                            imageVector = Icons.Default.AccountCircle,
+                            imageVector = Icons.Outlined.AccountCircle,
                             contentDescription = "",
                             modifier = Modifier.size(40.dp)
                         )
@@ -158,7 +151,7 @@ fun HomeScreen(navController: NavHostController) {
                         ) {
                             pins.filterIndexed { index, _ -> index % 2 == 0 }
                                 .forEach { pin ->
-                                    PinHomeTemplate(pin = pin)
+                                    PinHomeTemplate(pin) { onClickPinDetails(pin) }
                                 }
                         }
                         Column(
@@ -169,7 +162,7 @@ fun HomeScreen(navController: NavHostController) {
                         ) {
                             pins.filterIndexed { index, _ -> index % 2 != 0 }
                                 .forEach { pin ->
-                                    PinHomeTemplate(pin = pin)
+                                    PinHomeTemplate(pin) { onClickPinDetails(pin) }
                                 }
                         }
                     }
@@ -179,7 +172,7 @@ fun HomeScreen(navController: NavHostController) {
     )
 }
 @Composable
-fun PinHomeTemplate(pin: Pin) {
+fun PinHomeTemplate(pin: Pin, onClickPinDetails:() -> Unit) {
 
     Card(
         colors = CardDefaults.cardColors(
@@ -189,19 +182,16 @@ fun PinHomeTemplate(pin: Pin) {
         modifier = Modifier
             .fillMaxWidth()
             .border(BorderStroke(2.dp, MaterialTheme.colorScheme.surfaceVariant))
-            .clickable {}
+            .clickable {
+                onClickPinDetails.invoke()
+                Log.d("usuarioGetPinDetails", "usuarioClicouPin")
+            }
     ) {
     Image(
         painter = painterResource(pin.image),
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable
-            {
-
-            },
+        modifier = Modifier.fillMaxWidth(),
         contentDescription = "ImagePin"
     )
-
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -214,7 +204,6 @@ fun PinHomeTemplate(pin: Pin) {
 
             IconButton(
                 onClick = {
-
                     Log.d("ButaoPin", "UserPinDetailsButton")
 
             }) {
@@ -224,12 +213,3 @@ fun PinHomeTemplate(pin: Pin) {
     }
     Spacer(modifier = Modifier.height(8.dp))
 }
-
-/*val intent = Intent(context, PinDetailsActivity::class.java)
-Log.d("ButaoPin", "UserPinDetailsButton")
-
-intent.putExtra("pinNome", pin.pinNome)
-intent.putExtra("pinImg", pin.image)
-intent.putExtra("pinCriador", pin.pinCriador)
-intent.putExtra("pinCriador", pin.pinTopComentario)
-context.startActivity(intent)*/

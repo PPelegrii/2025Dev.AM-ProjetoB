@@ -1,72 +1,52 @@
 package com.example.pinlikest
 
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 
 @Composable
-fun AppNavigation(){
+fun AppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController, startDestination = "TelaLogo"){
+    NavHost(navController, startDestination = "TelaLogo") {
 
         composable("TelaLogo") {
-            //TelaLogo(toHome = { navController.navigate("HomeScreen") }) }
+            TelaLogo(toHome = { navController.navigate("HomeScreen") })
+        }
 
-        //composable("HomeScreen") {
-            HomeScreen(navController) }
+        composable("HomeScreen") {
+            HomeScreen(onClickPinDetails = { pin ->
+                navController.navigate(
+                    "PinDetails/${pin.image}/${pin.pinNome}/${pin.pinCriador}/${pin.pinTopComentario}"
+                )
+            } )
+        }
 
-        /*composable("PinDetails") {
-            backstackEntry ->
+        composable(
+            "PinDetails/{pinImg}/{pinNome}/{pinCriador}/{pinTopComentario}",
+            arguments = listOf(
+                navArgument("pinImg") { type = NavType.IntType },
+                navArgument("pinNome") { type = NavType.StringType },
+                navArgument("pinCriador") { type = NavType.StringType },
+                navArgument("pinTopComentario") { type = NavType.StringType }
+            )
+        ) { backstackEntry ->
 
-            var pin: Pin
+            val pinImg = backstackEntry.arguments!!.getInt("pinImg")
+            val pinNome = backstackEntry.arguments?.getString("pinNome") ?: ""
+            val pinCriador = backstackEntry.arguments?.getString("pinCriador")
+            val pinTopComentario = backstackEntry.arguments?.getString("pinTopComentario")
 
-            PinDetails(pinDetails = { navController.navigate("PinDetails") }
-            ) }*/
-
-        /*composable("PinDetailsActivity") {
-            backstackEntry ->
-            var pin: Pin
-            val pinImg =
-            val pinNome: String
-            val pinCriador: String?
-            val pinTopComentario: String?
-            //PinDetails
-        }*/
-        /*composable("tela2/{nome}") {
-                backstackEntry ->
-            val nome = backstackEntry.arguments?.getString("nome") ?: ""
-
-            Tela2(nome, onBack = { navController.popBackStack() } )
-        }*/
+            PinDetails(
+                pinImg,
+                pinNome,
+                pinCriador,
+                pinTopComentario,
+                onBack = { navController.popBackStack() }
+            )
+        }
     }
-}
-// não aqui né bobão
-@Composable
-fun Tela1(navController: NavHostController) {
-    val nome = "blah"
-
-    Button(
-        onClick = {
-            navController.navigate("tela2/$nome")
-        }
-    ) { Text("Abrir tela 2") }
-}
-@Composable
-fun Tela2(nome: String, onBack:() -> Unit) {
-
-    Text("Bem vindo $nome! :)")
-
-    Button(
-        onClick = {
-            //navController.navigate("home")
-            //navController.popBackStack() // mais otimizado
-            onBack()
-        }
-    ) { Text("Voltar pra tela 1") }
 }
