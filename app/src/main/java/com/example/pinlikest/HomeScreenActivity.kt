@@ -20,12 +20,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.MailOutline
@@ -63,7 +59,11 @@ class HomeScreenActivity : ComponentActivity() {
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(onClickPinDetails: (Pin) -> Unit) {
+fun HomeScreen(
+    onClickPinDetails: (Pin) -> Unit,
+    toProfile: () -> Unit,
+    toMessages: () -> Unit
+) {
     val pins = remember { PinsDatabase.pinsData.shuffled() }
 
     Scaffold(
@@ -111,7 +111,7 @@ fun HomeScreen(onClickPinDetails: (Pin) -> Unit) {
                         )
                     }
                     IconButton(onClick = {
-
+                        toMessages.invoke()
                         Log.d("botaoMessages", "usuario-clicouMessages_route")
                     }) {
                         Icon(
@@ -121,7 +121,7 @@ fun HomeScreen(onClickPinDetails: (Pin) -> Unit) {
                         )
                     }
                     IconButton(onClick = {
-
+                        toProfile.invoke()
                         Log.d("botaoUserProfile", "usuario-clicouUserProfile_route")
                     }) {
                         Icon(

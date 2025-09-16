@@ -18,11 +18,13 @@ fun AppNavigation() {
         }
 
         composable("HomeScreen") {
-            HomeScreen(onClickPinDetails = { pin ->
-                navController.navigate(
+            HomeScreen(
+                onClickPinDetails = { pin -> navController.navigate(
                     "PinDetails/${pin.image}/${pin.pinNome}/${pin.pinCriador}/${pin.pinTopComentario}"
-                )
-            } )
+                ) },
+                toProfile = { navController.navigate("PerfilScreen") },
+                toMessages = { navController.navigate("MessagesScreen") }
+            )
         }
 
         composable(

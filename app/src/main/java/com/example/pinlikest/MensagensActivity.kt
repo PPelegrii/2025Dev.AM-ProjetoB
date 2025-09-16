@@ -12,10 +12,15 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -34,7 +39,7 @@ import androidx.compose.ui.unit.dp
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MensagensScreen() {
+fun MessagesScreen() {
 
     Scaffold(
         topBar = {
@@ -52,7 +57,7 @@ fun MensagensScreen() {
                     ) {
                         IconButton(
                             onClick = {
-                                Log.d("botaoPerfilPicture", "usuario-clicouPerfil_route")
+                                Log.d("botaoCreateMessage", "usuario-clicouCreateMessage")
                             }) {
                             Icon(
                                 imageVector = Icons.Default.Create,
@@ -79,7 +84,7 @@ fun MensagensScreen() {
                         Log.d("botaoHome", "usuario-clicouHome_route")
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Home,
+                            imageVector = Icons.Outlined.Home,
                             contentDescription = "",
                             modifier = Modifier.size(40.dp)
                         )
@@ -88,7 +93,7 @@ fun MensagensScreen() {
                         Log.d("botaoSearch", "usuario-clicouSearch_route")
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Search,
+                            imageVector = Icons.Outlined.Search,
                             contentDescription = "",
                             modifier = Modifier.size(40.dp)
                         )
@@ -97,25 +102,21 @@ fun MensagensScreen() {
                         Log.d("botaoCreate/Upload", "usuario-clicouCreate/Upload_route")
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Add,
+                            imageVector = Icons.Outlined.Add,
                             contentDescription = "",
                             modifier = Modifier.size(40.dp)
                         )
                     }
-                    IconButton(onClick = {
-                        Log.d("botaoMessages", "usuario-clicouMessages_route")
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.MailOutline,
-                            contentDescription = "",
-                            modifier = Modifier.size(40.dp)
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Filled.Email,
+                        contentDescription = "",
+                        modifier = Modifier.size(40.dp)
+                    )
                     IconButton(onClick = {
                         Log.d("botaoUserProfile", "usuario-clicouUserProfile_route")
                     }) {
                         Icon(
-                            imageVector = Icons.Default.AccountCircle,
+                            imageVector = Icons.Outlined.AccountCircle,
                             contentDescription = "",
                             modifier = Modifier.size(40.dp)
                         )
