@@ -61,8 +61,8 @@ class HomeScreenActivity : ComponentActivity() {
 @Composable
 fun HomeScreen(
     onClickPinDetails: (Pin) -> Unit,
-    toProfile: () -> Unit,
-    toMessages: () -> Unit
+    toMessages: () -> Unit,
+    toProfile: () -> Unit
 ) {
     val pins = remember { PinsDatabase.pinsData.shuffled() }
 
@@ -86,6 +86,7 @@ fun HomeScreen(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Home,
@@ -98,7 +99,7 @@ fun HomeScreen(
                         Icon(
                             imageVector = Icons.Outlined.Search,
                             contentDescription = "",
-                            modifier = Modifier.size(40.dp)
+                            modifier = Modifier.size(30.dp)
                         )
                     }
                     IconButton(onClick = {
@@ -107,27 +108,27 @@ fun HomeScreen(
                         Icon(
                             imageVector = Icons.Outlined.Add,
                             contentDescription = "",
-                            modifier = Modifier.size(40.dp)
+                            modifier = Modifier.size(30.dp)
                         )
                     }
                     IconButton(onClick = {
-                        toMessages.invoke()
+                        toMessages()
                         Log.d("botaoMessages", "usuario-clicouMessages_route")
                     }) {
                         Icon(
                             imageVector = Icons.Outlined.MailOutline,
                             contentDescription = "",
-                            modifier = Modifier.size(40.dp)
+                            modifier = Modifier.size(30.dp)
                         )
                     }
                     IconButton(onClick = {
-                        toProfile.invoke()
+                        toProfile()
                         Log.d("botaoUserProfile", "usuario-clicouUserProfile_route")
                     }) {
                         Icon(
                             imageVector = Icons.Outlined.AccountCircle,
                             contentDescription = "",
-                            modifier = Modifier.size(40.dp)
+                            modifier = Modifier.size(30.dp)
                         )
                     }
                 }
@@ -183,7 +184,7 @@ fun PinHomeTemplate(pin: Pin, onClickPinDetails:() -> Unit) {
             .fillMaxWidth()
             .border(BorderStroke(2.dp, MaterialTheme.colorScheme.surfaceVariant))
             .clickable {
-                onClickPinDetails.invoke()
+                onClickPinDetails()
                 Log.d("usuarioGetPinDetails", "usuarioClicouPin")
             }
     ) {

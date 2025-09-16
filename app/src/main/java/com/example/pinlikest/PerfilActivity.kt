@@ -12,11 +12,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.MailOutline
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -34,7 +34,11 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerfilScreen(pinDetails:() -> Unit) {
+fun PerfilScreen(
+    pinDetails: (Pin) -> Unit,
+    toHome: () -> Unit,
+    toMessages: () -> Unit
+) {
     val pins = remember { PinsDatabase.pinsData }
 
     Scaffold(
@@ -59,7 +63,7 @@ fun PerfilScreen(pinDetails:() -> Unit) {
                             Icon(
                                 imageVector = Icons.Default.Person,
                                 contentDescription = "",
-                                modifier = Modifier.size(40.dp)
+                                modifier = Modifier.size(30.dp)
                             )
                         }
                     }
@@ -75,49 +79,51 @@ fun PerfilScreen(pinDetails:() -> Unit) {
                 ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
+                    horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     IconButton(onClick = {
+                        toHome()
                         Log.d("botaoHome", "usuario-clicouHome_route")
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Home,
+                            imageVector = Icons.Outlined.Home,
                             contentDescription = "",
-                            modifier = Modifier.size(40.dp)
+                            modifier = Modifier.size(30.dp)
                         )
                     }
                     IconButton(onClick = {
                         Log.d("botaoSearch", "usuario-clicouSearch_route")
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Search,
+                            imageVector = Icons.Outlined.Search,
                             contentDescription = "",
-                            modifier = Modifier.size(40.dp)
+                            modifier = Modifier.size(30.dp)
                         )
                     }
                     IconButton(onClick = {
                         Log.d("botaoCreate/Upload", "usuario-clicouCreate/Upload_route")
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Add,
+                            imageVector = Icons.Outlined.Add,
                             contentDescription = "",
-                            modifier = Modifier.size(40.dp)
+                            modifier = Modifier.size(30.dp)
                         )
                     }
                     IconButton(onClick = {
+                        toMessages()
                         Log.d("botaoMessages", "usuario-clicouMessages_route")
                     }) {
                         Icon(
-                            imageVector = Icons.Default.MailOutline,
+                            imageVector = Icons.Outlined.MailOutline,
                             contentDescription = "",
-                            modifier = Modifier.size(40.dp)
+                            modifier = Modifier.size(30.dp)
                         )
                     }
                     IconButton(onClick = {
                         Log.d("botaoUserProfile", "usuario-clicouUserProfile_route")
                     }) {
                         Icon(
-                            imageVector = Icons.Default.AccountCircle,
+                            imageVector = Icons.Filled.AccountCircle,
                             contentDescription = "",
                             modifier = Modifier.size(40.dp)
                         )
@@ -150,7 +156,7 @@ fun PerfilScreen(pinDetails:() -> Unit) {
                             ) {
                                 pins.forEach { pin ->
                                     if (pin.pinIsSaved) {
-                                        PinHomeTemplate(pin, pinDetails)
+                                        PinHomeTemplate(pin) { pinDetails(pin) }
                                     }
                                 }
                             }

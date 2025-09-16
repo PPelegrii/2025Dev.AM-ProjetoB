@@ -14,7 +14,9 @@ fun AppNavigation() {
     NavHost(navController, startDestination = "TelaLogo") {
 
         composable("TelaLogo") {
-            TelaLogo(toHome = { navController.navigate("HomeScreen") })
+            TelaLogo(
+                toHome = { navController.navigate("HomeScreen") }
+            )
         }
 
         composable("HomeScreen") {
@@ -22,8 +24,25 @@ fun AppNavigation() {
                 onClickPinDetails = { pin -> navController.navigate(
                     "PinDetails/${pin.image}/${pin.pinNome}/${pin.pinCriador}/${pin.pinTopComentario}"
                 ) },
-                toProfile = { navController.navigate("PerfilScreen") },
-                toMessages = { navController.navigate("MessagesScreen") }
+
+                toMessages = { navController.navigate("MessagesScreen") },
+                toProfile = { navController.navigate("PerfilScreen") }
+            )
+        }
+        composable("PerfilScreen") {
+            PerfilScreen(
+                pinDetails = { pin -> navController.navigate(
+                    "PinDetails/${pin.image}/${pin.pinNome}/${pin.pinCriador}/${pin.pinTopComentario}"
+                ) },
+
+                toHome = { navController.popBackStack("HomeScreen", false) },
+                toMessages = { navController.navigate("MessagesScreen") },
+            )
+        }
+        composable("MessagesScreen") {
+            MessagesScreen(
+                toHome = { navController.popBackStack("HomeScreen", false) },
+                toProfile = { navController.navigate("PerfilScreen") }
             )
         }
 
