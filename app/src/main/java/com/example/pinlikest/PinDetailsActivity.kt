@@ -111,7 +111,7 @@ fun PinDetails(
                         ) {
 
                             IconButton(onClick = {
-                                Log.d("botaoHome", "usuario-clicouCurtirPin")
+                                Log.d("botaoLike", "usuario-clicouCurtirPin")
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.FavoriteBorder,
@@ -120,7 +120,7 @@ fun PinDetails(
                                 )
                             }
                             IconButton(onClick = {
-                                Log.d("botaoSearch", "usuario-clicouComentariosPin")
+                                Log.d("botaoMessage", "usuario-clicouMessageCreatorPin")
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.MailOutline,

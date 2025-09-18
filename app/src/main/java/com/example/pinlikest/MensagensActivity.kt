@@ -1,36 +1,25 @@
 package com.example.pinlikest
 
 import android.annotation.SuppressLint
-import android.graphics.Paint.Style
+import android.content.Context
 import android.util.Log
-import android.widget.Space
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.content.contentReceiver
+import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MailOutline
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Home
@@ -57,17 +46,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MessagesScreen(
+    context: Context,
     toHome:() -> Unit,
     toProfile:() -> Unit
 ) {
@@ -166,32 +151,83 @@ fun MessagesScreen(
                     .padding(paddingValues)
             ) {
                 item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalAlignment = Alignment.CenterVertically
+                    Column(
+                        verticalArrangement = Arrangement.Center,
                     ) {
-                        Column(
-                            verticalArrangement = Arrangement.Center,
-                        ) {
-                            SendMessage(
-                                addMessage = { newMessage ->
-                                    MensagensDatabase.mensagensData.add(newMessage)
-                                }
-                            )
-                            mensagens.forEach { mensagem ->
-                                MensagemTemplate(mensagem)
-                            }
-                        }
+                        MessageController(
+                            context = context,
+                            addMessage = { newMessage ->
+                                MensagensDatabase.mensagensData.add(newMessage)
+                            },
+                        )
                     }
+                }
+                items(mensagens) { mensagem ->
+                    MensagemTemplate(context, mensagem)
                 }
             }
         }
     )
 }
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun MensagemTemplate(context: Context, mensagem: Mensagem) {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+        ),
+        shape = ShapeDefaults.ExtraLarge,
+        modifier = Modifier
+            .padding(top = 2.dp)
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = {
+                    Log.d("usuarioGetMensagem", "usuarioClicouMensagem")
+                },
+                onLongClick = {
+                    MensagensDatabase.mensagensData.remove(mensagem)
+
+                    botaoAlerta(context, "Mensagem removida :(")
+                    Log.d("usuarioLongPressMensagem", "usuarioPressionouMensagem")
+                }
+            )
+    ) {
+        Column(
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(2.dp)
+                .fillMaxWidth()
+        ) {
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .padding(2.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = mensagem.mensagemTitulo,
+                    fontWeight = FontWeight.ExtraBold
+                )
+                Text(
+                    text = "De: " + mensagem.mensagemRemetente,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = mensagem.mensagemDescricao,
+                    fontWeight = FontWeight.Normal
+                )
+            }
+        }
+    Spacer(modifier = Modifier.height(8.dp))
+}
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SendMessage(addMessage:(Mensagem) -> Unit) {
+fun MessageController(context: Context, addMessage: (Mensagem) -> Unit) {
 
     var messageTitulo by remember { mutableStateOf("") }
     var messageDescricao by remember { mutableStateOf("") }
@@ -248,64 +284,20 @@ fun SendMessage(addMessage:(Mensagem) -> Unit) {
                                 )
                             )
 
-                            // limpa os campos
                             messageTitulo = ""
                             messageDescricao = ""
                             messageRemetente = ""
                             messageDestinatario = ""
-                        }
-                        Log.d("botaoAPP", "mensagem-add")
 
+                            botaoAlerta(context, "Mensagem adicionada :)")
+                        Log.d("sendMessage", "mensagem-adicionada")
+                        }
                     }
                 ) { Text("Mandar messagem!") }
             }
         }
     }
 }
-@Composable
-fun MensagemTemplate(mensagem: Mensagem) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-        ),
-        shape = ShapeDefaults.ExtraLarge,
-        modifier = Modifier
-            .padding(top = 2.dp)
-            .fillMaxWidth()
-            .clickable {
-                Log.d("usuarioGetMensagem", "usuarioClicouMensagem")
-            }
-    ) {
-        Column(
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(2.dp)
-                .fillMaxWidth()
-        ) {
-            Row (
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .padding(2.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = mensagem.mensagemTitulo,
-                    fontWeight = FontWeight.ExtraBold
-                )
-                Text(
-                    text = "De: " + mensagem.mensagemRemetente,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = mensagem.mensagemDescricao,
-                    fontWeight = FontWeight.Normal
-                )
-            }
-        }
-    Spacer(modifier = Modifier.height(8.dp))
+fun botaoAlerta(context: Context, mensagem: String) {
+    Toast.makeText(context, mensagem, Toast.LENGTH_SHORT).show()
 }

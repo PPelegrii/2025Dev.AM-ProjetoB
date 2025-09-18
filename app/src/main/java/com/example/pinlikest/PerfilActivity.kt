@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -132,32 +131,23 @@ fun PerfilScreen(
             }
         },
         content = { paddingValues ->
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(paddingValues)
-                ) {
-                    item {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
+                item {
+                    Row(
+                        modifier = Modifier.padding(paddingValues),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            Modifier.padding(4.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Column(
-                                Modifier
-                                    .weight(1f)
-                                    .padding(4.dp),
-                                verticalArrangement = Arrangement.Center,
-                            ) {
-                                pins.forEach { pin ->
-                                    if (pin.pinIsSaved) {
-                                        PinHomeTemplate(pin) { pinDetails(pin) }
-                                    }
+                        Text("Seus Pins salvos apareceram abaixo:")
+                            pins.forEach { pin ->
+                                if (pin.pinIsSaved) {
+                                    PinHomeTemplate(pin) { pinDetails(pin) }
                                 }
                             }
                         }

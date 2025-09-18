@@ -18,7 +18,6 @@ fun AppNavigation() {
                 toHome = { navController.navigate("HomeScreen") }
             )
         }
-
         composable("HomeScreen") {
             HomeScreen(
                 onClickPinDetails = { pin -> navController.navigate(
@@ -41,6 +40,7 @@ fun AppNavigation() {
         }
         composable("MessagesScreen") {
             MessagesScreen(
+                context = navController.context,
                 toHome = { navController.popBackStack("HomeScreen", false) },
                 toProfile = { navController.navigate("PerfilScreen") }
             )
@@ -59,7 +59,7 @@ fun AppNavigation() {
             val pinImg = backstackEntry.arguments!!.getInt("pinImg")
             val pinNome = backstackEntry.arguments?.getString("pinNome") ?: ""
             val pinCriador = backstackEntry.arguments?.getString("pinCriador")
-            val pinTopComentario = backstackEntry.arguments?.getString("pinTopComentario")
+            val pinTopComentario = backstackEntry.arguments?.getString("pinTopComentario") ?: ""
 
             PinDetails(
                 pinImg,

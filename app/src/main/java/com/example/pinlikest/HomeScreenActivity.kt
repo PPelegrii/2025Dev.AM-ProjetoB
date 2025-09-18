@@ -39,7 +39,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -64,7 +63,7 @@ fun HomeScreen(
     toMessages: () -> Unit,
     toProfile: () -> Unit
 ) {
-    val pins = remember { PinsDatabase.pinsData.shuffled() }
+    val pins = PinsDatabase.pinsData.shuffled()
 
     Scaffold(
         topBar = {
@@ -174,7 +173,6 @@ fun HomeScreen(
 }
 @Composable
 fun PinHomeTemplate(pin: Pin, onClickPinDetails:() -> Unit) {
-
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
