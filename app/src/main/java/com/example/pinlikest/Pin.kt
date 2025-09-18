@@ -9,7 +9,7 @@ data class Pin(
 )
 
 object PinsDatabase {
-    val pinsData = listOf(
+    val pinsData = mutableListOf(
         Pin(R.drawable.pin1, "eu", "OgrandeMago13", "", false),
         Pin(R.drawable.pin2, "não", "OgrandeMago3309", "", false),
         Pin(R.drawable.pin3, "acredito", "OgrandeMago1", "", false),

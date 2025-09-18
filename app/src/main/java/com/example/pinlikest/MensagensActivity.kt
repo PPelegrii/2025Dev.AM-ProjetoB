@@ -1,5 +1,6 @@
 package com.example.pinlikest
 
+import android.annotation.SuppressLint
 import android.graphics.Paint.Style
 import android.util.Log
 import android.widget.Space
@@ -35,6 +36,7 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,11 +45,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ShapeDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -64,7 +71,7 @@ fun MessagesScreen(
     toHome:() -> Unit,
     toProfile:() -> Unit
 ) {
-    val mensagens = remember { MensagensDatabase.mensagensData }
+    val mensagens = MensagensDatabase.mensagensData
 
     Scaffold(
         topBar = {
@@ -165,9 +172,13 @@ fun MessagesScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(
-                            Modifier.weight(1f),
                             verticalArrangement = Arrangement.Center,
                         ) {
+                            SendMessage(
+                                addMessage = { newMessage ->
+                                    MensagensDatabase.mensagensData.add(newMessage)
+                                }
+                            )
                             mensagens.forEach { mensagem ->
                                 MensagemTemplate(mensagem)
                             }
@@ -178,16 +189,88 @@ fun MessagesScreen(
         }
     )
 }
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun SendMessage(addMessage:(Mensagem) -> Unit) {
 
+    var messageTitulo by remember { mutableStateOf("") }
+    var messageDescricao by remember { mutableStateOf("") }
+    var messageRemetente by remember { mutableStateOf("") }
+    var messageDestinatario by remember { mutableStateOf("") }
+
+    Surface(
+        modifier = Modifier.padding(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                TextField(
+                    value = messageTitulo,
+                    onValueChange = { messageTitulo = it },
+                    placeholder = { Text("Título") },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                TextField(
+                    value = messageDescricao,
+                    onValueChange = { messageDescricao = it },
+                    placeholder = { Text("Descrição") },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                TextField(
+                    value = messageRemetente,
+                    onValueChange = { messageRemetente = it },
+                    placeholder = { Text("Remetente") },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                TextField(
+                    value = messageDestinatario,
+                    onValueChange = { messageDestinatario = it },
+                    placeholder = { Text("Destinatario") },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Button(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    shape = ShapeDefaults.ExtraSmall,
+                    onClick = {
+                        if (messageTitulo.isNotBlank() && messageDestinatario.isNotBlank()) {
+                            addMessage(
+                                Mensagem(
+                                    mensagemTitulo = messageTitulo,
+                                    mensagemDescricao = messageDescricao,
+                                    mensagemRemetente = messageRemetente,
+                                    mensagemDestinatario = messageDestinatario
+                                )
+                            )
+
+                            // limpa os campos
+                            messageTitulo = ""
+                            messageDescricao = ""
+                            messageRemetente = ""
+                            messageDestinatario = ""
+                        }
+                        Log.d("botaoAPP", "mensagem-add")
+
+                    }
+                ) { Text("Mandar messagem!") }
+            }
+        }
+    }
+}
 @Composable
 fun MensagemTemplate(mensagem: Mensagem) {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.primary
+            containerColor = MaterialTheme.colorScheme.primary,
         ),
         shape = ShapeDefaults.ExtraLarge,
         modifier = Modifier
+            .padding(top = 2.dp)
             .fillMaxWidth()
             .clickable {
                 Log.d("usuarioGetMensagem", "usuarioClicouMensagem")
@@ -212,7 +295,7 @@ fun MensagemTemplate(mensagem: Mensagem) {
                     fontWeight = FontWeight.ExtraBold
                 )
                 Text(
-                    text = mensagem.mensagemRemetente,
+                    text = "De: " + mensagem.mensagemRemetente,
                     fontWeight = FontWeight.Bold
                 )
             }
